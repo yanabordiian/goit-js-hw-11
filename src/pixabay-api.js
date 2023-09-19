@@ -9,7 +9,7 @@ export class PixabayAPI {
                 key: this.#KEY,
                 image_type: 'photo',
                 orientation: 'horizontal',
-                safesearh: true
+                safesearch: true
     }
 page = 1;
 q = null;

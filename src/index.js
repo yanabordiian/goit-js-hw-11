@@ -1,16 +1,21 @@
+
+import './css/common.css';
 import { Notify } from "notiflix";
-import { PixabayAPI, PixabayAPI } from "./pixabay-api";
+import { PixabayAPI } from "./pixabay-api";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+
 const form = document.querySelector('.search-form');
 const newGallery = document.querySelector('.gallery'); 
+const btnLoadMore = document.querySelector('.load-more');
 
 
 const pixabayAPI = new PixabayAPI();
 let gallery = new SimpleLightbox('.gallery a');
 
-form.addEventListener('submit', onSearch)
+form.addEventListener('submit', onSearch);
+btnLoadMore.addEventListener('click', onLoadMore);
 
 function onSearch(e) {
     e.preventDefault();
@@ -22,7 +27,7 @@ function onSearch(e) {
     pixabayAPI.q = searchQuery;
 
     if (!searchQuery) {
-        Notify.info("We're sorry, but you've reached the end of search results.");
+        Notify.failure("Sorry, there are no images matching your search query. Please try again.");
         return;
     }
     fetchGallery();
@@ -35,19 +40,19 @@ async function fetchGallery() {
         const {data} = await pixabayAPI.fetchPics();
         if (data.totalHits === 0)
         {
-            Notify.info("Sorry, there are no images matching your search query. Please try again.");
+            Notify.failure("Sorry, there are no images matching your search query. Please try again.");
             return;
         }
         newGallery.innerHTML = createGallery(data.hits);
-        Notify.info("Hooray! We found ${data.totalHits} images.");
+        Notify.info(`Hooray! We found ${data.totalHits} images.`);
         gallery.refresh();
         
-    } catch (error) { console.log(error); }
+        if (data.totalHits > pixabayAPI.per_page) { btnLoadMore.classList.remove('is-hidden') };
+        
+    } catch (error) { console.error("Error fetching gallery:",error); }
     }
     
     
-
-
 
 function createGallery(data) {
     
@@ -57,7 +62,7 @@ function createGallery(data) {
  `
  <a class="gallery-link" href="${largeImageURL}">
  <div class="photo-card">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  <img class="photo" src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
       <b>Likes</b>${likes}
@@ -79,7 +84,25 @@ function createGallery(data) {
  }
 
 
+function onLoadMore() {
+    pixabayAPI.page += 1;
+    searchMorePics();
+}
 
+async function searchMorePics() {
+    try {
+        const { data } = await pixabayAPI.fetchPics();
+
+        newGallery.insertAdjacentHTML('beforeend', createGallery(data.hits));
+        gallery.refresh();
+
+        if (data.hits.length < pixabayAPI.per_page) {
+            btnLoadMore.classList.add('is-hidden');
+            return Notify.info( "We're sorry, but you've reached the end of search results."
+      );
+        }
+    } catch (error) { console.error("Error fetching more pics:",error); }
+}
         
 
 
