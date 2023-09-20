@@ -48,7 +48,7 @@ async function fetchGallery() {
         gallery.refresh();
         
         if (data.totalHits > pixabayAPI.per_page) { btnLoadMore.classList.remove('is-hidden') };
-        
+        scrollGallery();
     } catch (error) { console.error("Error fetching gallery:",error); }
     }
     
@@ -101,9 +101,19 @@ async function searchMorePics() {
             return Notify.info( "We're sorry, but you've reached the end of search results."
       );
         }
+        scrollGallery();
     } catch (error) { console.error("Error fetching more pics:",error); }
 }
         
 
-
+function scrollGallery() {
+    const { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
+    
+    window.scrollBy({
+        top: cardHeight * 2,
+        behavior: "smooth",
+    });
+}
 
