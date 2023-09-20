@@ -1,7 +1,7 @@
 
 import './css/common.css';
 import { Notify } from "notiflix";
-import { PixabayAPI } from "./pixabay-api";
+import { PixabayAPI } from "./js/pixabay-api";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
