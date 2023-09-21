@@ -25,6 +25,7 @@ function onSearch(e) {
     const searchQuery = form.elements['searchQuery'].value.trim();
 
     pixabayAPI.q = searchQuery;
+    pixabayAPI.page = 1;
 
     if (!searchQuery) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
@@ -37,7 +38,10 @@ function onSearch(e) {
 
 async function fetchGallery() {
     try {
-        const {data} = await pixabayAPI.fetchPics();
+        const { data } = await pixabayAPI.fetchPics();
+        
+        totalPages = Math.ceil(data.totalHits / pixabayAPI.per_page);
+
         if (data.totalHits === 0)
         {
             Notify.failure("Sorry, there are no images matching your search query. Please try again.");
