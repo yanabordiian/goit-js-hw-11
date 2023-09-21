@@ -14,6 +14,7 @@ export class PixabayAPI {
 page = 1;
 q = null;
 per_page = 40;
+    
 
     async fetchPics() {
         const searchParams = new URLSearchParams({
