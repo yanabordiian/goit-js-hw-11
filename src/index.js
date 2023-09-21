@@ -13,7 +13,7 @@ const btnLoadMore = document.querySelector('.load-more');
 
 const pixabayAPI = new PixabayAPI();
 let gallery = new SimpleLightbox('.gallery a');
-//let totalPages = 0;
+let totalPages = 0;
 
 form.addEventListener('submit', onSearch);
 btnLoadMore.addEventListener('click', onLoadMore);
@@ -41,7 +41,7 @@ async function fetchGallery() {
     try {
         const { data } = await pixabayAPI.fetchPics();
         
-        //totalPages = Math.ceil(data.totalHits / pixabayAPI.per_page);
+        totalPages = Math.ceil(data.totalHits / pixabayAPI.per_page);
 
         if (data.totalHits === 0)
         {
