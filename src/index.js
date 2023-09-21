@@ -41,7 +41,7 @@ async function fetchGallery() {
     try {
         const { data } = await pixabayAPI.fetchPics();
         
-        totalPages = Math.ceil(data.totalHits / pixabayAPI.per_page);
+        
 
         if (data.totalHits === 0)
         {
