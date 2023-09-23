@@ -18,6 +18,7 @@ let totalPages = 0;
 form.addEventListener('submit', onSearch);
 btnLoadMore.addEventListener('click', onLoadMore);
 
+
 function onSearch(e) {
     e.preventDefault();
     newGallery.innerHTML = '';
@@ -25,11 +26,14 @@ function onSearch(e) {
     const form = e.currentTarget;
     const searchQuery = form.elements['searchQuery'].value.trim();
 
+   
     pixabayAPI.q = searchQuery;
     pixabayAPI.page = 1;
 
     if (!searchQuery) {
+        btnLoadMore.classList.add('is-hidden'); 
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+        
         return;
     }
     fetchGallery();
@@ -45,7 +49,9 @@ async function fetchGallery() {
 
         if (data.totalHits === 0)
         {
+            btnLoadMore.classList.add('is-hidden');
             Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+            
             return;
         }
         newGallery.innerHTML = createGallery(data.hits);
