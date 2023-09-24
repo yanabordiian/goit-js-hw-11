@@ -22,6 +22,7 @@ btnLoadMore.addEventListener('click', onLoadMore);
 function onSearch(e) {
     e.preventDefault();
     newGallery.innerHTML = '';
+    btnLoadMore.classList.add('is-hidden');
     
     const form = e.currentTarget;
     const searchQuery = form.elements['searchQuery'].value.trim();
@@ -106,8 +107,9 @@ async function searchMorePics() {
 
         newGallery.insertAdjacentHTML('beforeend', createGallery(data.hits));
         gallery.refresh();
+        const lastPage = Math.ceil(data.totalHits / pixabayAPI.per_page);
 
-        if (data.hits.length < pixabayAPI.per_page) {
+        if (lastPage === pixabayAPI.page) {
             btnLoadMore.classList.add('is-hidden');
             return Notify.info( "We're sorry, but you've reached the end of search results."
       );
